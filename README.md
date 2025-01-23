@@ -77,4 +77,4 @@ This repository demonstrates a basic infrastructure setup and application deploy
 
     Instructions are provided on how to test the deployed application. This may include API endpoints to call, data to send, and expected responses.
 
-**Repository Structure**
+
