@@ -1,0 +1,41 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build Docker image
+      run: |
+        docker build -t my-app:latest .
+
+    - name: Login to ECR (if using AWS ECR)
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: your-aws-region
+
+      id: login-ecr
+
+    - name: Push image to ECR (if using AWS ECR)
+      run: |
+        docker tag my-app:latest ${ECR_REPOSITORY_URI}:latest
+        docker push ${ECR_REPOSITORY_URI}:latest
+
+      needs: login-ecr
+      env:
+        ECR_REPOSITORY_URI: ${{ steps.login-ecr.outputs.ecr-repository-uri }}
+
+    - name: Deploy to AWS (using AWS ECS, for example) 
+      # ... (Your AWS ECS deployment steps here) 
+      # This would involve creating or updating a task definition, 
+      # deploying a service, etc. 
+      # You can use AWS SDKs or tools like AWS CLI for this.
