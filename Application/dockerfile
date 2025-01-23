@@ -1,0 +1,13 @@
+FROM node:18-alpine # Use a Node.js 18 image with Alpine Linux for a smaller base image
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000 # Replace with the port your application listens on
+
+CMD ["npm", "start"] # Replace with the command to start your application
